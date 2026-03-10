@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fertilizer Recommendation System</title>
+
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Fertilizer Recommendation System</h1>
+
+      <!-- FORM START -->
+      <form method="POST">
+        <!-- CITY & WEATHER -->
+        <div class="grid">
+          <input
+            type="text"
+            id="city"
+            placeholder="Enter City Name (for Weather)"
+          />
+
+          <button type="button" onclick="fetchWeather()">🌦 Get Weather</button>
+        </div>
+
+        <br />
+
+        <!-- INPUT GRID -->
+        <div class="grid">
+          <input
+            type="number"
+            name="temperature"
+            id="temperature"
+            placeholder="Temperature (°C)"
+            required
+          />
+
+          <input
+            type="number"
+            name="humidity"
+            id="humidity"
+            placeholder="Humidity (%)"
+            required
+          />
+
+          <input
+            type="number"
+            name="moisture"
+            placeholder="Soil Moisture (%)"
+            required
+          />
+
+          <input
+            type="number"
+            name="nitrogen"
+            placeholder="Nitrogen (N)"
+            required
+          />
+
+          <input
+            type="number"
+            name="potassium"
+            placeholder="Potassium (K)"
+            required
+          />
+
+          <input
+            type="number"
+            name="phosphorous"
+            placeholder="Phosphorous (P)"
+            required
+          />
+
+          <select name="soil" required>
+            <option value="">Select Soil Type</option>
+            {% for s in soils %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          </select>
+
+          <select name="crop" required>
+            <option value="">Select Crop Type</option>
+            {% for c in crops %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit">Predict Fertilizer</button>
+      </form>
+      <!-- FORM END -->
+
+      <!-- RESULT -->
+      {% if prediction %}
+      <div class="result">
+        <h2>Recommended Fertilizer: {{ prediction }}</h2>
+        <p><b> Recommended Dosage:</b> {{ dosage }}</p>
+        <p><b> Expert Tip:</b> {{ tip }}</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- WEATHER SCRIPT -->
+    <script>
+      function fetchWeather() {
+        const city = document.getElementById("city").value;
+
+        if (!city) {
+          alert("Please enter a city name");
+          return;
+        }
+
+        fetch(`/weather?city=${city}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.temperature && data.humidity) {
+              document.getElementById("temperature").value = data.temperature;
+              document.getElementById("humidity").value = data.humidity;
+            } else {
+              alert("City not found. Try another city.");
+            }
+          })
+          .catch((error) => {
+            alert("Error fetching weather data");
+          });
+      }
+    </script>
+  </body>
+</html>
