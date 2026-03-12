@@ -6,7 +6,7 @@ import requests
 app = Flask(__name__)
 
 # -------- WEATHER API CONFIG --------
-WEATHER_API_KEY = "e16360a9a81a83079fd7591148a6608e"
+WEATHER_API_KEY = "YOUR_API_KEY"
 
 # -------- Load Model & Encoders --------
 model = joblib.load("fertilizer_model.pkl")
